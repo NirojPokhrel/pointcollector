@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<color name="edit_text_background">#FFA7FAFA</color>   
+	<color name="edit_text_color">#FF000000</color> 
+	<color name="button_color">#Ff473EF7</color>
+	<color name="black">#FF000000</color>
+	<color name="list_view_colors">#FFEBFA87</color>
+	<color name="losing_color">#FFF7AFAB</color>
+	<color name="winning_color">#FFDACBF5</color>
+</resources>
