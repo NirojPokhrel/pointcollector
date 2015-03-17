@@ -25,10 +25,10 @@ public class GameListTable {
 	private CustomSQLiteOpenHelper mSQLiteOpenHelper;
 	private SQLiteDatabase mDataBase;
 	
-	public class GameListData {
+	public static class GameListData {
 		public int mID;
 		public String mGameName;
-		public byte[] mListOfPlayerName;
+		public String mListOfPlayerName;
 		public String mDate;
 	}
 	
@@ -38,7 +38,7 @@ public class GameListTable {
 				" ( " +
 				COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
 				COLUMN_GAME_NAME + " TEXT, " +
-				COLUMN_PLAYER_NAME + " BLOB, " +
+				COLUMN_PLAYER_NAME + " TEXT, " +
 				COLUMN_DATE + " TEXT " +
 				" )";
 		
@@ -91,7 +91,7 @@ public class GameListTable {
 		
 		gameData = new GameListData();
 		gameData.mGameName = cursor.getString(1); // 1 is for GAME_NAME
-		gameData.mListOfPlayerName = cursor.getBlob(2);
+		gameData.mListOfPlayerName = cursor.getString(2);
 		gameData.mDate = cursor.getString(3);
 		
 		return gameData;
