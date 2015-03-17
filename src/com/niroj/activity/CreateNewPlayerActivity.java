@@ -1,0 +1,12 @@
+package com.niroj.activity;
+
+import android.app.Activity;
+import android.os.Bundle;
+
+public class CreateNewPlayerActivity extends Activity {
+	@Override
+	public void onCreate(Bundle savedInstanceState ) {
+		super.onCreate(savedInstanceState);
+		
+	}
+}

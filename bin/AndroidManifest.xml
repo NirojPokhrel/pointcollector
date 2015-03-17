@@ -17,29 +17,17 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.niroj.marriagepointcollector.MainActivity"
+            android:name="com.niroj.activity.StartPageActivity"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name="com.niroj.activity.CreateGameActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity
-            android:name="com.niroj.marriagepointcollector.GameListActivity"
-            android:label="@string/game_list" >
-        </activity>
-        <activity
-            android:name="com.niroj.marriagepointcollector.CreateGameActivity"
-            android:label="@string/new_game" >
-        </activity>
-        <activity
-            android:name="com.niroj.marriagepointcollector.PointCollectorActivity"
-            android:label="@string/collect_point">
-        </activity>
-        <activity
-            android:name="com.niroj.marriagepointcollector.HistoryActivity"
-            android:label="@string/game_history">
         </activity>
     </application>
 
