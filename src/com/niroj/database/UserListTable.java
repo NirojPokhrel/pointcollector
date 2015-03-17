@@ -27,7 +27,7 @@ public class UserListTable {
 	private CustomSQLiteOpenHelper mSQLiteOpenHelper;
 	private SQLiteDatabase mDataBase;
 	
-	public class UserListData {
+	public static class UserListData {
 		public int mID;
 		public String mPlayerName;
 		public String mPlayerDisplayName;

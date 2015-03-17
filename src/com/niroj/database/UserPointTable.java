@@ -97,4 +97,8 @@ public class UserPointTable {
 		
 		return pointData;
 	}
+	
+	public void CreateTable() {
+		mDatabase.execSQL(GetUserPointTableCreateCmd(mPlayerName));
+	}
 }
