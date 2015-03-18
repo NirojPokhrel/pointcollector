@@ -42,54 +42,65 @@ public final class R {
         public static final int ic_action_delete=0x7f020005;
         public static final int ic_action_done=0x7f020006;
         public static final int ic_action_new=0x7f020007;
-        public static final int ic_launcher=0x7f020008;
-        public static final int launching_page=0x7f020009;
-        public static final int launching_page_background_img=0x7f02000a;
+        public static final int ic_action_photo=0x7f020008;
+        public static final int ic_launcher=0x7f020009;
+        public static final int image_holder=0x7f02000a;
+        public static final int launching_page=0x7f02000b;
+        public static final int launching_page_background_img=0x7f02000c;
     }
     public static final class id {
-        public static final int action_settings=0x7f0a001a;
-        public static final int addNewPlayer=0x7f0a0004;
-        public static final int add_player_button=0x7f0a0009;
-        public static final int auto_complete=0x7f0a0008;
+        public static final int action_settings=0x7f0a0020;
+        public static final int addNewPlayer=0x7f0a0005;
+        public static final int add_player_button=0x7f0a0010;
+        public static final int auto_complete=0x7f0a000f;
         public static final int autocomplete_text=0x7f0a0001;
-        public static final int checkPlayers=0x7f0a000f;
+        public static final int cameraBtn=0x7f0a0007;
+        public static final int checkPlayers=0x7f0a0015;
         public static final int container=0x7f0a0000;
-        public static final int createGame=0x7f0a0003;
-        public static final int createNewGame=0x7f0a0010;
-        public static final int editPointCollector=0x7f0a0014;
-        public static final int gameListView=0x7f0a000b;
-        public static final int gameNameHistory=0x7f0a0016;
-        public static final int history=0x7f0a0011;
-        public static final int inputGameName=0x7f0a0007;
-        public static final int lLPlayerHistory=0x7f0a0017;
-        public static final int listOfGamesHistory=0x7f0a0015;
-        public static final int listOfPlayers=0x7f0a0002;
-        public static final int listPlayerNames=0x7f0a0012;
-        public static final int listPointCollector=0x7f0a0013;
-        public static final int list_of_players=0x7f0a000a;
-        public static final int playerName=0x7f0a000d;
-        public static final int playerNameHistory=0x7f0a0018;
-        public static final int playerPointHistory=0x7f0a0019;
-        public static final int removePlayer=0x7f0a000e;
-        public static final int startGameBtn=0x7f0a000c;
-        public static final int text=0x7f0a0006;
-        public static final int toast_layout_root=0x7f0a0005;
+        public static final int createGame=0x7f0a0004;
+        public static final int createNewGame=0x7f0a0016;
+        public static final int createNewPlayer=0x7f0a000a;
+        public static final int displayName=0x7f0a0009;
+        public static final int editPointCollector=0x7f0a001a;
+        public static final int gameListView=0x7f0a0012;
+        public static final int gameName=0x7f0a0002;
+        public static final int gameNameHistory=0x7f0a001c;
+        public static final int history=0x7f0a0017;
+        public static final int inputGameName=0x7f0a000e;
+        public static final int lLPlayerHistory=0x7f0a001d;
+        public static final int listOfGames=0x7f0a000d;
+        public static final int listOfGamesHistory=0x7f0a001b;
+        public static final int listOfPlayers=0x7f0a0003;
+        public static final int listPlayerNames=0x7f0a0018;
+        public static final int listPointCollector=0x7f0a0019;
+        public static final int list_of_players=0x7f0a0011;
+        public static final int playerName=0x7f0a0008;
+        public static final int playerNameHistory=0x7f0a001e;
+        public static final int playerPointHistory=0x7f0a001f;
+        public static final int removePlayer=0x7f0a0014;
+        public static final int startGameBtn=0x7f0a0013;
+        public static final int text=0x7f0a000c;
+        public static final int toast_layout_root=0x7f0a000b;
+        public static final int userImage=0x7f0a0006;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
         public static final int autocomplete_item_list=0x7f030001;
         public static final int create_new_game=0x7f030002;
-        public static final int custom_toast=0x7f030003;
-        public static final int dummy_linearlayout=0x7f030004;
-        public static final int game_info_input=0x7f030005;
-        public static final int game_list=0x7f030006;
-        public static final int list_view_row_item=0x7f030007;
-        public static final int new_activity_main=0x7f030008;
-        public static final int point_collector_view=0x7f030009;
-        public static final int show_sum_layout=0x7f03000a;
-        public static final int view_history_activity=0x7f03000b;
-        public static final int view_history_player_list=0x7f03000c;
-        public static final int view_history_player_list_each_row=0x7f03000d;
+        public static final int create_new_player=0x7f030003;
+        public static final int custom_toast=0x7f030004;
+        public static final int dummy_linearlayout=0x7f030005;
+        public static final int game_history=0x7f030006;
+        public static final int game_info_input=0x7f030007;
+        public static final int game_list=0x7f030008;
+        public static final int list_view_row_item=0x7f030009;
+        public static final int new_activity_main=0x7f03000a;
+        public static final int player_list=0x7f03000b;
+        public static final int point_collector_view=0x7f03000c;
+        public static final int show_sum_layout=0x7f03000d;
+        public static final int view_history_activity=0x7f03000e;
+        public static final int view_history_player_list=0x7f03000f;
+        public static final int view_history_player_list_each_row=0x7f030010;
     }
     public static final class menu {
         public static final int main=0x7f090000;
@@ -143,12 +154,13 @@ public final class R {
  All customizations that are NOT specific to a particular API-level can go here. 
          */
         public static final int AppTheme=0x7f080001;
+        public static final int Divider=0x7f080002;
         /** 
         Base application theme for API 14+. This theme completely replaces
         AppBaseTheme from BOTH res/values/styles.xml and
         res/values-v11/styles.xml on API 14+ devices.
     
          */
-        public static final int button=0x7f080002;
+        public static final int button=0x7f080003;
     }
 }

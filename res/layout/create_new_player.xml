@@ -2,8 +2,61 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:background="@drawable/launching_page_background_img" >
+    <ImageView
+        android:id="@+id/userImage"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/image_holder"
+        android:layout_alignParentTop="true"
+        android:layout_margin="10dp"
+        android:scaleType="centerCrop"
+        />
+    <Button
+        android:id="@+id/cameraBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ic_action_photo"
+        android:layout_alignBottom="@id/userImage"
+        android:layout_alignRight="@id/userImage"
+        android:layout_alignEnd="@id/userImage"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="60dp"
+        android:layout_marginEnd="60dp" />
+    
+    <EditText 
+        android:id="@+id/playerName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="PLAYER NAME"
+        android:layout_below="@id/userImage"
+        android:textSize="24sp"
+        android:layout_margin="20dp"
+        android:gravity="center"
+        android:background="@android:color/white"/>
     
     
+    <EditText 
+        android:id="@+id/displayName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="DISPLAY NAME"
+        android:layout_below="@id/playerName"
+        android:textSize="24sp"
+        android:layout_margin="20dp"
+        android:gravity="center"
+        android:background="@android:color/white"/>
+    
+     <Button 
+        android:id="@+id/createNewPlayer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/displayName"
+        android:textSize="24sp"
+        android:text="Create New Player"
+        android:layout_margin="20dp"
+        android:gravity="center"/>
 
 </RelativeLayout>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/launching_page_background_img" >
+    
+    <TextView 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center" 
+        android:textSize="32sp"
+        android:text="Players"
+        android:layout_margin="20dp"
+        android:layout_gravity="center"
+        android:textStyle="bold|italic"/>
+    <View style="@style/Divider" />
+    <ListView 
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:id="@+id/listOfPlayers"
+        android:layout_weight="1.0"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"/>
+    <View style="@style/Divider" />
+    
+     <Button 
+        android:id="@+id/addNewPlayer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+        android:text="Add New Player"
+        android:layout_margin="20dp"
+        android:gravity="center"/>
+</LinearLayout>
