@@ -1,13 +1,23 @@
 package com.niroj.activity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.niroj.marriagepointcollector.R;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.ListView;
+import android.widget.TextView;
 
 public class PlayerListActivity extends Activity {
 	
@@ -19,7 +29,6 @@ public class PlayerListActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		mActivity = this;
 		setContentView(R.layout.player_list);
-		
 		Button btn = (Button) findViewById(R.id.addNewPlayer);
 		btn.setOnClickListener(mOnClickListener);
 	}
