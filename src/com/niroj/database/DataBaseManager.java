@@ -31,12 +31,6 @@ public class DataBaseManager {
 	private ArrayList<UserPointTable> mUserPointTableList;
 	private int mNumOfReference = 0;
 	
-	
-	//Current Game Info
-	private String mCurrentGameName;
-	private ArrayList<UserPointTable> mCurrentPlayersTableList;
-	private ArrayList<ArrayList<UserPointData>> mCurrentLLGameUserPointData;
-	
 	private DataBaseManager(Context context) {
 		mContext = context;
 		
@@ -48,7 +42,6 @@ public class DataBaseManager {
 		mGameListData = new ArrayList<GameListData>();
 		mLLUserPointData = new ArrayList<ArrayList<UserPointData>>();
 		
-		mCurrentLLGameUserPointData = new ArrayList<ArrayList<UserPointData>>();
 		//Wrong thing to do !!! Be very careful about it !!!
 		Open(context);
 	}
@@ -163,18 +156,6 @@ public class DataBaseManager {
 	}
 	
 	private byte[] ConvetBitmapToByteStream( Bitmap image ) {
-//		int bytes = image.getByteCount();
-//		
-//
-//		ZSystem.LogD(" bytes count :" +bytes);
-//		ByteBuffer buffer = ByteBuffer.allocate(bytes);
-//		image.copyPixelsToBuffer(buffer);
-//		if( BitmapFactory.decodeByteArray(buffer.array(), 0, bytes) == null ) {
-//			ZSystem.LogD("It's also not fine here");
-//		} else {
-//			ZSystem.LogD("It's fine here");
-//		}
-//		return buffer.array();
 		ByteArrayOutputStream stream = new ByteArrayOutputStream();
 		image.compress(CompressFormat.PNG, 70, stream);
 	    return stream.toByteArray();
@@ -197,6 +178,7 @@ public class DataBaseManager {
 		gameData.mListOfPlayerDisplayName = PlayerNameToJson(displayNames);
 		gameData.mDate = date;
 		mGameListTable.InsertGameData(gameData);
+		mGameListData.add(gameData);
 	}
 	
 	private int FindIndex( String str ) {
@@ -265,11 +247,13 @@ public class DataBaseManager {
 		for( int i=0; i<players.size(); i++ ) {
 			for( int k=0; k<mUserListData.size(); k++ ) {
 				if( players.get(i).equals(mUserListData.get(k).mPlayerDisplayName ) ){
+					ArrayList<UserPointData> userPointList = mLLUserPointData.get(k);
 					UserPointTable userTable = mUserPointTableList.get(k);
 					UserPointData userPointData = new UserPointData();
 					userPointData.mAssociatedGameName = game;
 					userPointData.mGamePoint = points.get(i);
 					userTable.InsertUserPointInTable(userPointData);
+					userPointList.add(userPointData);
 					
 					break;
 				}

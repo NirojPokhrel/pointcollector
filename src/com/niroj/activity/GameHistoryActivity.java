@@ -117,12 +117,12 @@ public class GameHistoryActivity extends Activity {
 				try {
 					ArrayList<String> playerDisplayName = mDbManager.JsonToPlayerList(playerJson);
 					for( int j=0; j<playerDisplayName.size(); j++ ) {
-						listGameInfo.add(playerDisplayName.get(i));
-						ArrayList<UserPointData> userPointTableData = mDbManager.GetPlayerInfo(playerDisplayName.get(i));
+						listGameInfo.add(playerDisplayName.get(j));
+						ArrayList<UserPointData> userPointTableData = mDbManager.GetPlayerInfo(playerDisplayName.get(j));
 						int sum = 0;
 						for( int k=0; k<userPointTableData.size(); k++ ) {
-							if( userPointTableData.get(i).mAssociatedGameName.equals(gameData.mGameName)) {
-								sum += userPointTableData.get(i).mGamePoint;
+							if( userPointTableData.get(k).mAssociatedGameName.equals(gameData.mGameName)) {
+								sum += userPointTableData.get(k).mGamePoint;
 							}
 						}
 						listGameInfo.add(Integer.toString(sum));
@@ -131,7 +131,7 @@ public class GameHistoryActivity extends Activity {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				mLListString.add(listGameInfo);
+				mAdapter.add(listGameInfo);
 			}
 		}
 		

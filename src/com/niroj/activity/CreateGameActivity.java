@@ -43,16 +43,13 @@ public class CreateGameActivity extends Activity {
 		mActivity = this;
 		Button btnCreateGame, btnAddNewPlayer;
 
-		ZSystem.LogD("Level 1");
 		mDbManager = DataBaseManager.GetInstance(this);
-		ZSystem.LogD("Level 2");
 		mListOfPlayers = new ArrayList<String[]>();
 		mSelectedPlayer = new ArrayList<String>();
 		mPlayerListAdapter = new PlayerListAdapter(this, mListOfPlayers);
 
 		ListView lv = (ListView) findViewById(R.id.listOfPlayers);
 		lv.setAdapter(mPlayerListAdapter);
-		ZSystem.LogD("Level 3");
 		mPopulateThread.run(); //Try doing this to prevent it from being used by both setAdapter class and runnable class
 		
 		mEtGameName = (EditText) findViewById(R.id.gameName);
@@ -111,16 +108,10 @@ public class CreateGameActivity extends Activity {
 			//Access the data from the create new player
 			String[] str = new String[2];
 			
-			ZSystem.LogD("Level 0");
 			str[0] = data.getStringExtra(CreateNewPlayerActivity.PLAYER_NAME);
-			ZSystem.LogD("Level 1");
 			str[1] = data.getStringExtra(CreateNewPlayerActivity.DISPLAY_NAME);
-			ZSystem.LogD("Level 2");
 			mPlayerListAdapter.add(str);
-			ZSystem.LogD("Level 3");
-			//mPlayerListAdapter.notifyDataSetChanged();
 		}
-		ZSystem.LogD("Level 4");
 	}
 	
 	private class PlayerListAdapter extends ArrayAdapter<String[]> {
