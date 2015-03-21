@@ -3,6 +3,7 @@ package com.niroj.activity;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.niroj.database.DataBaseManager;
 import com.niroj.marriagepointcollector.R;
 import com.niroj.marriagepointcollector.ZSystem;
 
@@ -25,6 +26,7 @@ public class CreateGameActivity extends Activity {
 	
 	private Activity mActivity;
 	private EditText mEtGameName;
+	private DataBaseManager mDbManager;
 	private ArrayList<String> mListOfPlayers;
 	private static final int REQUEST_CODE_ADD_NEW_PLAYER = 2;
 	@Override
@@ -50,6 +52,8 @@ public class CreateGameActivity extends Activity {
 		
 		btnCreateGame.setOnClickListener(mOnClickListener);
 		btnAddNewPlayer.setOnClickListener(mOnClickListener);
+		
+		mDbManager = DataBaseManager.GetInstance(this);
 	}
 	
 	private OnClickListener mOnClickListener = new OnClickListener() {
@@ -59,11 +63,19 @@ public class CreateGameActivity extends Activity {
 			// TODO Auto-generated method stub
 			switch(view.getId()) {
 			case R.id.createGame:
+				Intent intent = new Intent(mActivity, PointCollectorActivity.class);
+				ArrayList<String> arrayList = new ArrayList<String>();
+				arrayList.add("niroj");
+				arrayList.add("bikalpa");
+				arrayList.add("bijay");
+				intent.putExtra(ZSystem.NAME_STRING,"Deepawali");
+				intent.putStringArrayListExtra(ZSystem.NAME_OF_PLAYERS, arrayList);
+				mActivity.startActivity(intent);
 				break;
 			case R.id.addNewPlayer:
 				//This should call start Activity for result
-				Intent intent = new Intent(mActivity, CreateNewPlayerActivity.class );
-				mActivity.startActivityForResult( intent, REQUEST_CODE_ADD_NEW_PLAYER  );
+				Intent intent1 = new Intent(mActivity, CreateNewPlayerActivity.class );
+				mActivity.startActivityForResult( intent1, REQUEST_CODE_ADD_NEW_PLAYER  );
 				break;
 			}
 		}

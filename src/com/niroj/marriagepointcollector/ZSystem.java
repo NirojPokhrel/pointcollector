@@ -17,6 +17,10 @@ public class ZSystem {
 	public static final String NAME_STRING = "String";
 	
 	public static final String NAME_OF_PLAYERS = "PlayerName";
+	public static final String SHARED_PREF_CHECK_AVAILABILITY = "UnsavedGame";
+	public static final String SHARED_PREFERENCES = "com.niroj.activity.PREFERENCE_KEY";
+	public static final String SHARED_PREF_SET_OF_PLAYERS = "players_list";
+	public static final String SHARED_PREF_GAME_NAME = "game_name";
 	
 	public static final int FINAL_GAME_LIST_ACTIVITY_ID = 1011;
 	public static final int FINAL_CREATE_GAME_ACTIVITY_ID = 1012;
