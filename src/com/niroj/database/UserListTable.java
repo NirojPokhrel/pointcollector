@@ -3,6 +3,8 @@ package com.niroj.database;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.niroj.marriagepointcollector.ZSystem;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -21,7 +23,6 @@ public class UserListTable {
 	public static final String COLUMN_PLAYER_NAME ="player_name";
 	public static final String COLUMN_PLAYER_DISPLAY_NAME = "player_display_name";
 	public static final String COLUMN_PLAYER_IMAGE = "player_image";
-	public static final String COLUMN_PLAYER_TABLE_NAME = "player_table_name";
 
 	
 	private CustomSQLiteOpenHelper mSQLiteOpenHelper;
@@ -32,7 +33,6 @@ public class UserListTable {
 		public String mPlayerName;
 		public String mPlayerDisplayName;
 		public byte[] mImage;
-		public String mPlayerTableName;
 	}
 
 	public static String GetUserListTableCreateCmd() {
@@ -42,8 +42,7 @@ public class UserListTable {
 				COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
 				COLUMN_PLAYER_NAME + " TEXT, " +
 				COLUMN_PLAYER_DISPLAY_NAME + " TEXT, " + 
-				COLUMN_PLAYER_IMAGE + " BLOB, " +
-				COLUMN_PLAYER_TABLE_NAME + " TEXT " +
+				COLUMN_PLAYER_IMAGE + " BLOB " +
 				" )";
 		
 		return cmd;
@@ -51,7 +50,7 @@ public class UserListTable {
 	
 	
 	private static final String[] ALL_COLUMN_USER_LIST_DATA = { COLUMN_ID, COLUMN_PLAYER_NAME, COLUMN_PLAYER_DISPLAY_NAME,
-		COLUMN_PLAYER_IMAGE, COLUMN_PLAYER_TABLE_NAME };
+		COLUMN_PLAYER_IMAGE };
 	
 	public UserListTable(Context context) {
 		mSQLiteOpenHelper = CustomSQLiteOpenHelper.GetInstance(context);
@@ -59,6 +58,9 @@ public class UserListTable {
 	
 	public void open() {
 		mDataBase = mSQLiteOpenHelper.getWritableDatabase();
+		if( mDataBase == null ) {
+			ZSystem.LogD("open: userListTable DataBase is null ");
+		}
 	}
 	
 	public void close() {
@@ -74,18 +76,18 @@ public class UserListTable {
 		contents.put(COLUMN_PLAYER_NAME, userData.mPlayerName);
 		contents.put(COLUMN_PLAYER_DISPLAY_NAME, userData.mPlayerDisplayName);
 		contents.put(COLUMN_PLAYER_IMAGE, userData.mImage);
-		contents.put(COLUMN_PLAYER_TABLE_NAME, userData.mPlayerTableName);
 		
-		return mDataBase.insert(COLUMN_PLAYER_TABLE_NAME, null, contents);
+		return mDataBase.insert(USER_LIST_TABLE, null, contents);
 	}
 	
 	public List<UserListData> GetListOfUser() {
 		List<UserListData> userDataList = new ArrayList<UserListData>();
 		
-		Cursor cursor = mDataBase.query(COLUMN_PLAYER_TABLE_NAME, ALL_COLUMN_USER_LIST_DATA, null, null, null, null, null);
+		Cursor cursor = mDataBase.query(USER_LIST_TABLE, ALL_COLUMN_USER_LIST_DATA, null, null, null, null, null);
 		cursor.moveToFirst();
-		while(cursor.isAfterLast()) {
+		while(!cursor.isAfterLast()) {
 			UserListData userData = CursorToUserData(cursor);
+			userDataList.add(userData);
 			
 			cursor.moveToNext();
 		}
@@ -99,7 +101,6 @@ public class UserListTable {
 		userData.mPlayerName = cursor.getString(1);
 		userData.mPlayerDisplayName = cursor.getString(2);
 		userData.mImage = cursor.getBlob(3);
-		userData.mPlayerTableName = cursor.getString(4);
 		
 		return userData;
 	}

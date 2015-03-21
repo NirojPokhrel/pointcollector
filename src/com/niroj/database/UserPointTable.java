@@ -3,10 +3,13 @@ package com.niroj.database;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.niroj.marriagepointcollector.ZSystem;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 
 
 public class UserPointTable {
@@ -26,7 +29,7 @@ public class UserPointTable {
 	private SQLiteDatabase mDatabase;
 	private String mPlayerName;
 	
-	public class UserPointData {
+	public static class UserPointData {
 		public int mID;
 		public String mAssociatedGameName;
 		public int mGamePoint;
@@ -36,7 +39,7 @@ public class UserPointTable {
 		String cmd = " CREATE TABLE " +
 				USER_POINT_TABLE + playerName +
 				" ( " +
-				COLUMN_ID + " INTEGER PRIMARY KEY AUTO INCREMENT, " +
+				COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
 				COLUMN_ASSOCIATED_GAME + " TEXT, " +
 				COLUMN_POINT_FOR_EACH_GAME +" INTEGER " +
 				" )";
@@ -73,11 +76,20 @@ public class UserPointTable {
 		List<UserPointData> userPointList;
 		String tableName;
 		
+		ZSystem.LogD("GetPointOfUser Level 0");
 		tableName = USER_POINT_TABLE + mPlayerName;
+		ZSystem.LogD("GetPointOfUser Level 01");
 		userPointList = new ArrayList<UserPointData>();
+		ZSystem.LogD("GetPointOfUser Level 02");
+		ZSystem.LogD("GetPointOfUser: "+tableName);
+		if( mDatabase == null ) {
+			ZSystem.LogD("Database is null");
+		}
 		Cursor cursor = mDatabase.query( tableName, ALL_COLUMNS_USER_POINT_TABLE, null, null, null, null, null);
+		ZSystem.LogD("GetPointOfUser Level 1");
 		cursor.moveToFirst();
-		
+
+		ZSystem.LogD("GetPointOfUser Level 2");
 		while(!cursor.isAfterLast()) {
 			UserPointData userPoint;
 			
@@ -85,7 +97,8 @@ public class UserPointTable {
 			userPointList.add(userPoint);
 			cursor.moveToNext();
 		}
-		
+
+		ZSystem.LogD("GetPointOfUser Level 3");
 		return userPointList;
 	}
 	
@@ -98,7 +111,10 @@ public class UserPointTable {
 		return pointData;
 	}
 	
-	public void CreateTable() {
-		mDatabase.execSQL(GetUserPointTableCreateCmd(mPlayerName));
+	public static void CreateTable( String playerName, Context context ) {
+		SQLiteOpenHelper sqliteOpenHelper = CustomSQLiteOpenHelper.GetInstance(context); 
+		SQLiteDatabase sqliteDatabase = sqliteOpenHelper.getWritableDatabase();
+		sqliteDatabase.execSQL(GetUserPointTableCreateCmd(playerName));
+		ZSystem.LogD("CreateTable cmd: "+GetUserPointTableCreateCmd(playerName));
 	}
 }

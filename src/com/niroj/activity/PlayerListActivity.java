@@ -3,7 +3,10 @@ package com.niroj.activity;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.niroj.database.DataBaseManager;
+import com.niroj.database.UserListTable.UserListData;
 import com.niroj.marriagepointcollector.R;
+import com.niroj.marriagepointcollector.ZSystem;
 
 import android.app.Activity;
 import android.content.Context;
@@ -27,25 +30,34 @@ public class PlayerListActivity extends Activity {
 	
 	private Activity mActivity;
 	private static int REQUEST_CODE_ADD_NEW_PLAYER;
-	private ArrayList<String> mListOfPlayers;
-	private PlayerListAdapter mListAdapter;
+	private ArrayList<UserListData> mListOfPlayers;
+	private DataBaseManager mDbManager;
+	private PlayerListAdapter mPlayerListAdapter;
 	
 	@Override
 	public void onCreate( Bundle savedInstanceState ) {
 		super.onCreate(savedInstanceState);
 		mActivity = this;
+		ZSystem.LogD("PlayerListActivity: Level 0");
 		setContentView(R.layout.player_list);
+		ZSystem.LogD("Level 1");
 		Button btn = (Button) findViewById(R.id.addNewPlayer);
 		btn.setOnClickListener(mOnClickListener);
+		ZSystem.LogD("PlayerListActivity: Level 2");
 
-		mListOfPlayers = new ArrayList<String>();
-		mListOfPlayers.add("Niroj Pokhrel");
-		mListOfPlayers.add("Bikalpa Pokhrel");
-		mListOfPlayers.add("Bijay Basnet");
-		PlayerListAdapter adapter = new PlayerListAdapter(this, mListOfPlayers);
+		mListOfPlayers = new ArrayList<UserListData>(); 
+		mPlayerListAdapter = new PlayerListAdapter(this, mListOfPlayers);
 
+		ZSystem.LogD("PlayerListActivity: Level 3");
 		ListView lv = (ListView) findViewById(R.id.listOfPlayers);
-		lv.setAdapter(adapter);
+		lv.setAdapter(mPlayerListAdapter);
+		
+
+		mDbManager = DataBaseManager.GetInstance(this);
+		ZSystem.LogD("PlayerListActivity: Level 4");
+		mPlayerList.run();
+		ZSystem.LogD("PlayerListActivity: Level 5");
+		
 	}
 	
 	private OnClickListener mOnClickListener = new OnClickListener() {
@@ -72,13 +84,17 @@ public class PlayerListActivity extends Activity {
 			return;
 		if( requestCode == REQUEST_CODE_ADD_NEW_PLAYER ) {
 			//Access the data from the create new player
+			UserListData userData = new UserListData();
+			userData.mPlayerName = data.getStringExtra(CreateNewPlayerActivity.PLAYER_NAME);
+			userData.mPlayerDisplayName = data.getStringExtra(CreateNewPlayerActivity.DISPLAY_NAME);
+			mPlayerListAdapter.add(userData);
 		}
 	}
 	
-	private class PlayerListAdapter extends ArrayAdapter<String> {
+	private class PlayerListAdapter extends ArrayAdapter<UserListData> {
 		private Context mContext;
 		
-		public PlayerListAdapter(Context context, List<String> objects) {
+		public PlayerListAdapter(Context context, List<UserListData> objects) {
 			super(context, 0, objects);
 			// TODO Auto-generated constructor stub
 			mContext = context;
@@ -86,7 +102,7 @@ public class PlayerListActivity extends Activity {
 		
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent ) {
-			String str = getItem(position);
+			UserListData userData = getItem(position);
 			
 			if( convertView == null ) {
 				LayoutInflater lp = LayoutInflater.from(mContext);
@@ -94,8 +110,8 @@ public class PlayerListActivity extends Activity {
 			}
 			TextView tv = (TextView) convertView.findViewById(R.id.playerName);
 			tv.setOnTouchListener(mChangebackgroundListener);
-			tv.setText(str);
-			tv.setTag(str);
+			tv.setText(userData.mPlayerName);
+			tv.setTag(userData);
 			return convertView;
 		}
 		
@@ -114,14 +130,29 @@ public class PlayerListActivity extends Activity {
 				case MotionEvent.ACTION_UP:
 					v.setBackgroundResource(R.drawable.player_list_background);
 					Intent intent = new Intent(mActivity, PlayerInfoActivity.class);
-					String str = (String)v.getTag();
-					intent.putExtra(PlayerInfoActivity.PLAYER_NAME, str);
+					UserListData userData = (UserListData)v.getTag();
+					intent.putExtra(PlayerInfoActivity.PLAYER_NAME, userData.mPlayerName);
+					intent.putExtra(PlayerInfoActivity.PLAYER_DISPLAY_NAME, userData.mPlayerDisplayName);
 					mActivity.startActivity(intent);
 					return true;
 				}
 				return false;
 			}
 		};
+		
+	};
+	
+	private Runnable mPlayerList = new Runnable() {
+
+		@Override
+		public void run() {
+			// TODO Auto-generated method stub
+			ArrayList<UserListData> userListData = mDbManager.GetUserListData(); 
+			ZSystem.LogD("userListData.size() = " + userListData.size());
+			for( int i=0; i<userListData.size(); i++ ) {
+				mPlayerListAdapter.add(userListData.get(i));
+			}
+		}
 		
 	};
 }

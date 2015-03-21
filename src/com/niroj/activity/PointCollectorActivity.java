@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.niroj.database.DataBaseManager;
 import com.niroj.gamedata.DataType;
 import com.niroj.gamedata.FileOperations;
 import com.niroj.marriagepointcollector.R;
@@ -46,24 +47,26 @@ public class PointCollectorActivity extends Activity {
 	private String mGameName = null;
 	ArrayList<String> mPlayersName;
 	private boolean mIsDataDirty = false;
-	private FileOperations mFileOps;
+	//private FileOperations mFileOps;
 	private Activity mActivity = null;
 	private boolean mbIsReady = false;
 	SharedPreferences.Editor mPrefEditor;
+	private DataBaseManager mDbManager;
+	private ArrayList<Integer> mCurretnIntegerList;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mActivity = this;
-
+		mDbManager = DataBaseManager.GetInstance(this);
 
 		SharedPreferences sharedPref = getSharedPreferences(ZSystem.SHARED_PREFERENCES, Context.MODE_PRIVATE);
 		mPrefEditor = sharedPref.edit();
-		
 		boolean isOldGame = sharedPref.getBoolean(ZSystem.SHARED_PREF_CHECK_AVAILABILITY, false);
 		if( isOldGame ) {
 			Set<String> playerSet = sharedPref.getStringSet(ZSystem.SHARED_PREF_SET_OF_PLAYERS, null);
 			//Check if new ArrayList<> has to be created ?? Most probably yes
+			//Initialize the array as well here from the previous data
 			mPlayersName = new ArrayList<String>(playerSet);
 			mGameName = sharedPref.getString(ZSystem.SHARED_PREF_GAME_NAME, null);
 		} else {
@@ -122,7 +125,7 @@ public class PointCollectorActivity extends Activity {
 		}
 		mLLayoutEditBox.setVisibility(View.GONE);
 
-		mFileOps = FileOperations.getInstance();
+		//mFileOps = FileOperations.getInstance();
 	}
 
 	@Override
@@ -200,6 +203,8 @@ public class PointCollectorActivity extends Activity {
 				WarningDialogForKatFad dialog1 = new WarningDialogForKatFad();
 				dialog1.show(getFragmentManager(), "Warning");
 			}
+			mCurretnIntegerList = pointList;
+			mWriteInToDataBase.run();
 			
 			return true;
 		}
@@ -213,7 +218,7 @@ public class PointCollectorActivity extends Activity {
 		case FINAL_POINTER_SAVE_AND_EXIT: {
 			// Save the data in the file
 			DataType dataType = createWritableData();
-			mFileOps.writeDataInFile(dataType);
+			//mFileOps.writeDataInFile(dataType);
 			mIsDataDirty = false;
 			finish();
 			return true;
@@ -398,6 +403,16 @@ public class PointCollectorActivity extends Activity {
 		}
 
 	}
+	
+	private Runnable mWriteInToDataBase = new Runnable() {
+
+		@Override
+		public void run() {
+			// TODO Auto-generated method stub
+			mDbManager.InsertGamePoint(mGameName, mPlayersName, mCurretnIntegerList);
+		}
+		
+	};
 
 	private final int FINAL_POINTER_NEW_INPUT_ADD_DONE = 1;
 	private final int FINAL_POINTER_NEW_INPUT_ADD = 2;

@@ -1,5 +1,6 @@
 package com.niroj.database;
 
+import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
@@ -15,6 +16,7 @@ import com.niroj.marriagepointcollector.ZSystem;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
 
 public class DataBaseManager {
@@ -47,6 +49,8 @@ public class DataBaseManager {
 		mLLUserPointData = new ArrayList<ArrayList<UserPointData>>();
 		
 		mCurrentLLGameUserPointData = new ArrayList<ArrayList<UserPointData>>();
+		//Wrong thing to do !!! Be very careful about it !!!
+		Open(context);
 	}
 	
 	public static DataBaseManager GetInstance(Context context) {
@@ -57,23 +61,37 @@ public class DataBaseManager {
 				}
 			}
 		}
-		
 		return mDBManager;
 	}
 
 	public void Open(Context context) {
 		if( mNumOfReference == 0 ) {
+			ZSystem.LogD("Open: Level 1");
 			mUserListTable.open();
+			ZSystem.LogD("Open: Level 2");
 			mGameListTable.open();
-		
-			mUserListData = (ArrayList<UserListData>) mUserListTable.GetListOfUser();
+
+			ZSystem.LogD("Open: Level 3");
 			mGameListData = (ArrayList<GameListData>) mGameListTable.GetAllGameData();
+			ZSystem.LogD("Open: Level 4");
+			mUserListData = (ArrayList<UserListData>) mUserListTable.GetListOfUser();
+			ZSystem.LogD("Open: Level 5");
 			for( int i=0; i<mUserListData.size(); i++ ) {
+				ZSystem.LogD("Open: Inside for loop " + mUserListData.size());
+				ZSystem.LogD("Open: Inside for loop " + mUserListData.get(i).mPlayerDisplayName );
 				UserPointTable userPointTable = new UserPointTable(context, mUserListData.get(i).mPlayerDisplayName);
-				
+
+				userPointTable.Open();
+				ZSystem.LogD("Open: Inside for loop Level 0");
 				mUserPointTableList.add(userPointTable);
+				if( userPointTable == null ) {
+					ZSystem.LogD("Open: Inside for loop Level userPointTable is null");
+				}
+				ZSystem.LogD("Open: Inside for loop Level 1");
 				mLLUserPointData.add((ArrayList<UserPointData>) userPointTable.GetPointOfUser());
+				ZSystem.LogD("Open: Inside for loop Level 2");
 			}
+			ZSystem.LogD("Open: Level 7");
 		}
 		mNumOfReference++;
 	}
@@ -94,11 +112,13 @@ public class DataBaseManager {
 		userListData.mPlayerName = playerName;
 		userListData.mPlayerDisplayName = displayName;
 		userListData.mImage = ConvetBitmapToByteStream(image);
+		ZSystem.LogD("Error entering the user entry: " + mUserListTable.InsertUserDataInTable(userListData));
+		mUserListData.add(userListData);
+
+		UserPointTable.CreateTable(displayName, mContext);
 		
-		mUserListTable.InsertUserDataInTable(userListData);
 		UserPointTable userPointTable = new UserPointTable(mContext, displayName);
 		userPointTable.Open();
-		userPointTable.CreateTable();
 		mUserPointTableList.add(userPointTable);
 		if (mLLUserPointData != null) {
 			ArrayList<UserPointData> userPointData = (ArrayList<UserPointData>) userPointTable
@@ -143,48 +163,40 @@ public class DataBaseManager {
 	}
 	
 	private byte[] ConvetBitmapToByteStream( Bitmap image ) {
-		int bytes = image.getByteCount();
-		
-		ByteBuffer buffer = ByteBuffer.allocate(bytes);
-		image.copyPixelsToBuffer(buffer);
-		
-		return buffer.array();
+//		int bytes = image.getByteCount();
+//		
+//
+//		ZSystem.LogD(" bytes count :" +bytes);
+//		ByteBuffer buffer = ByteBuffer.allocate(bytes);
+//		image.copyPixelsToBuffer(buffer);
+//		if( BitmapFactory.decodeByteArray(buffer.array(), 0, bytes) == null ) {
+//			ZSystem.LogD("It's also not fine here");
+//		} else {
+//			ZSystem.LogD("It's fine here");
+//		}
+//		return buffer.array();
+		ByteArrayOutputStream stream = new ByteArrayOutputStream();
+		image.compress(CompressFormat.PNG, 70, stream);
+	    return stream.toByteArray();
 	}
 	
 	//Let user program call it directly
 	public static Bitmap ConvertByteStreamToBitmap( byte[] imageByteStream ) {
+		ZSystem.LogD(" ImageByteStream length :" +imageByteStream.length);
 		Bitmap bitmap = BitmapFactory.decodeByteArray(imageByteStream, 0, imageByteStream.length);
-		
+		if( bitmap == null ) {
+			ZSystem.LogD("Bitmap is null");
+		}
 		return bitmap;
 	}
 	
-	public void CreateNewGame( String gameName, ArrayList<String> playerNames, String date ) {
+	public void CreateNewGame( String gameName, ArrayList<String> displayNames, String date ) {
 		GameListData gameData = new GameListData();
 		
-		mCurrentGameName = gameName;
 		gameData.mGameName = gameName;
-		gameData.mListOfPlayerName = PlayerNameToJson(playerNames);
+		gameData.mListOfPlayerDisplayName = PlayerNameToJson(displayNames);
 		gameData.mDate = date;
 		mGameListTable.InsertGameData(gameData);
-		
-		//MAKE A CLASS TO KEEP ALL THESE VALUES AS A CURRENT GAME INSTANCES. OTHERWISE IT IS LOOKING CONFUSING.
-		//All the players are already created that is ensured by top level
-		/*
-		 * Now create an instance of each player for the current run.
-		 */
-		if( mUserListData == null ) {
-			//Do some initialization first
-			ZSystem.LogE("Please call Open() function first to initialize");
-			
-			return;
-		} else {
-			for( int i=0; i<playerNames.size(); i++ ) {
-				int index = FindIndex(playerNames.get(i));
-				
-				mCurrentPlayersTableList.add(mUserPointTableList.get(index));
-				mCurrentLLGameUserPointData.add(mLLUserPointData.get(index));
-			}
-		}
 	}
 	
 	private int FindIndex( String str ) {
@@ -194,6 +206,20 @@ public class DataBaseManager {
 		}	
 		
 		return -1;
+	}
+	
+	public UserListData GetUserData(String userDisplayName) {
+		ZSystem.LogD("mUserListData.size() :" + mUserListData.size());
+		for (int i = 0; i < mUserListData.size(); i++) {
+			ZSystem.LogD("userDisplayName from list :"
+					+ mUserListData.get(i).mPlayerDisplayName
+					+ " From function calll :" + userDisplayName);
+
+			if (mUserListData.get(i).mPlayerDisplayName.equals(userDisplayName))
+				return mUserListData.get(i);
+		}
+
+		return null;
 	}
 	
 	public String PlayerNameToJson(ArrayList<String> nameList ) {
@@ -212,7 +238,7 @@ public class DataBaseManager {
 		
 		JSONObject jFinalObj = new JSONObject();
 		try {
-			jFinalObj.put(NAMES_ARRAYLIST, jFinalObj);
+			jFinalObj.put(NAMES_ARRAYLIST, jsonArray);
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -233,6 +259,22 @@ public class DataBaseManager {
 		}
 		
 		return listPlayer;
+	}
+	
+	public void InsertGamePoint( String game, ArrayList<String> players, ArrayList<Integer> points) {
+		for( int i=0; i<players.size(); i++ ) {
+			for( int k=0; k<mUserListData.size(); k++ ) {
+				if( players.get(i).equals(mUserListData.get(k).mPlayerDisplayName ) ){
+					UserPointTable userTable = mUserPointTableList.get(k);
+					UserPointData userPointData = new UserPointData();
+					userPointData.mAssociatedGameName = game;
+					userPointData.mGamePoint = points.get(i);
+					userTable.InsertUserPointInTable(userPointData);
+					
+					break;
+				}
+			}
+		}
 	}
 	
 	public static String NAMES_ARRAYLIST = "player_name_list"; 

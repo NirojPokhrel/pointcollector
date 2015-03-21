@@ -3,6 +3,12 @@ package com.niroj.activity;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONException;
+
+import com.niroj.database.DataBaseManager;
+import com.niroj.database.UserPointTable;
+import com.niroj.database.GameListTable.GameListData;
+import com.niroj.database.UserPointTable.UserPointData;
 import com.niroj.marriagepointcollector.R;
 
 import android.app.Activity;
@@ -22,47 +28,18 @@ public class GameHistoryActivity extends Activity {
 	
 	private ArrayList<ArrayList<String>> mLListString;
 	private GameHistoryAdapter mAdapter;
+	private DataBaseManager mDbManager;
 	@Override
 	public void onCreate(Bundle savedInstanceState ) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.game_history);
 		
-		ArrayList<String> listItem1 = new ArrayList<String>();
-		listItem1.add("Dashain");
-		listItem1.add("Niroj Pokhrel");
-		listItem1.add("300");
-		listItem1.add("Bikalpa Pokhrel");
-		listItem1.add("500");
-		listItem1.add("Bijay Basnet");
-		listItem1.add("300");
-		
-
-		ArrayList<String> listItem2 = new ArrayList<String>();
-		listItem2.add("Tihar");
-		listItem2.add("Niroj Pokhrel");
-		listItem2.add("300");
-		listItem2.add("Bikalpa Pokhrel");
-		listItem2.add("500");
-		
-
-		ArrayList<String> listItem3 = new ArrayList<String>();
-		listItem3.add("Holi");
-		listItem3.add("Niroj Pokhrel");
-		listItem3.add("300");
-		listItem3.add("Bikalpa Pokhrel");
-		listItem3.add("500");
-		listItem3.add("Bijay Basnet");
-		listItem3.add("300");
-		listItem3.add("Sandeep Bastola");
-		listItem3.add("-300");
-		
+		mDbManager = DataBaseManager.GetInstance(this);		
 		mLListString = new ArrayList<ArrayList<String>>();
-		mLListString.add(listItem1);
-		mLListString.add(listItem2);
-		mLListString.add(listItem3);
 		mAdapter = new GameHistoryAdapter(this, mLListString);
 		ListView lv = (ListView) findViewById(R.id.listOfGames);
 		lv.setAdapter(mAdapter);
+		mGetHistory.run();
 	}
 
 	
@@ -86,14 +63,7 @@ public class GameHistoryActivity extends Activity {
 			TextView tv = (TextView) convertView.findViewById(R.id.playerName);
 			tv.setOnTouchListener(mChangebackgroundListener);
 			String htmlString = ConvertToHtmlString(strList);
-//			"<h1>" +
-//				"Game Name"+
-//			"</h1>" +
-//			"Niroj Pokhrel : 120<br>" +
-//			"Bikalpa Pokhrel : 340<br>" +
-//			"Bijay Basnet : - 460<br>";
 			tv.setText(Html.fromHtml(htmlString));
-			//tv.setText(str);
 			return convertView;
 		}
 		
@@ -127,6 +97,43 @@ public class GameHistoryActivity extends Activity {
 				return false;
 			}
 		};
+		
+	};
+	
+	
+	private Runnable mGetHistory = new Runnable() {
+
+		@Override
+		public void run() {
+			// TODO Auto-generated method stub
+			ArrayList<GameListData> gameListData = mDbManager.GetGameListData();
+			
+			for( int i=0; i<gameListData.size(); i++ ) {
+				ArrayList<String> listGameInfo = new ArrayList<String>();
+				GameListData gameData = gameListData.get(i);
+				
+				listGameInfo.add(gameData.mGameName);
+				String playerJson = gameData.mListOfPlayerDisplayName;
+				try {
+					ArrayList<String> playerDisplayName = mDbManager.JsonToPlayerList(playerJson);
+					for( int j=0; j<playerDisplayName.size(); j++ ) {
+						listGameInfo.add(playerDisplayName.get(i));
+						ArrayList<UserPointData> userPointTableData = mDbManager.GetPlayerInfo(playerDisplayName.get(i));
+						int sum = 0;
+						for( int k=0; k<userPointTableData.size(); k++ ) {
+							if( userPointTableData.get(i).mAssociatedGameName.equals(gameData.mGameName)) {
+								sum += userPointTableData.get(i).mGamePoint;
+							}
+						}
+						listGameInfo.add(Integer.toString(sum));
+					}
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				mLListString.add(listGameInfo);
+			}
+		}
 		
 	};
 }

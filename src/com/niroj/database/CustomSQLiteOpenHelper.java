@@ -1,5 +1,7 @@
 package com.niroj.database;
 
+import com.niroj.marriagepointcollector.ZSystem;
+
 import android.content.Context;
 import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
@@ -29,6 +31,7 @@ public class CustomSQLiteOpenHelper extends SQLiteOpenHelper {
 	private CustomSQLiteOpenHelper(Context context) {
 		// TODO Auto-generated constructor stub
 		super( context, DATABASE_NAME, null, DATABASE_VERSION );
+		ZSystem.LogD("CustomSQLiteOpenHelper for database called");
 	}
 	
 	
@@ -38,9 +41,9 @@ public class CustomSQLiteOpenHelper extends SQLiteOpenHelper {
 		/*
 		 * Create two tables which has to be created anyhow !!!!
 		 */
-		
-		db.execSQL(GameListTable.GetGameListTableCreateCmd());
+		ZSystem.LogD("onCreate called for database");
 		db.execSQL(UserListTable.GetUserListTableCreateCmd());
+		db.execSQL(GameListTable.GetGameListTableCreateCmd());
 	}
 
 	

@@ -3,6 +3,8 @@ package com.niroj.database;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.niroj.marriagepointcollector.ZSystem;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -28,7 +30,7 @@ public class GameListTable {
 	public static class GameListData {
 		public int mID;
 		public String mGameName;
-		public String mListOfPlayerName;
+		public String mListOfPlayerDisplayName;
 		public String mDate;
 	}
 	
@@ -63,7 +65,7 @@ public class GameListTable {
 		ContentValues container = new ContentValues();
 		
 		container.put(COLUMN_GAME_NAME, gameListData.mGameName);
-		container.put(COLUMN_PLAYER_NAME, gameListData.mListOfPlayerName);
+		container.put(COLUMN_PLAYER_NAME, gameListData.mListOfPlayerDisplayName);
 		container.put(COLUMN_DATE, gameListData.mDate);
 		
 		return mDataBase.insert(GAME_LIST_TABLE, null, container);
@@ -76,6 +78,7 @@ public class GameListTable {
 		
 		cursor.moveToFirst();
 		while( !cursor.isAfterLast() ) {
+			ZSystem.LogD("GetAllGameData: Inside cursor loop");
 			GameListData gameData = CursorToData(cursor);
 			
 			listGames.add(gameData);
@@ -91,7 +94,7 @@ public class GameListTable {
 		
 		gameData = new GameListData();
 		gameData.mGameName = cursor.getString(1); // 1 is for GAME_NAME
-		gameData.mListOfPlayerName = cursor.getString(2);
+		gameData.mListOfPlayerDisplayName = cursor.getString(2);
 		gameData.mDate = cursor.getString(3);
 		
 		return gameData;
