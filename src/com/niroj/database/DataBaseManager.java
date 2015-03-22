@@ -58,7 +58,7 @@ public class DataBaseManager {
 	}
 
 	public void Open(Context context) {
-		if( mNumOfReference == 0 ) {]
+		if( mNumOfReference == 0 ) {
 			mUserListTable.open();
 			mGameListTable.open();
 
