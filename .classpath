@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry kind="lib" path="E:/Android Development/Workspace/MarriagePointCollector/libs/androidplot-core-0.6.2-SNAPSHOT.jar" sourcepath="E:/AndroidPlot/androidplot-core-0.6.2-SNAPSHOT-sources.jar"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>

@@ -49,6 +49,10 @@
             android:name="com.niroj.activity.PointCollectorActivity"
             android:label="@string/app_name" >
         </activity>
+        <activity
+            android:name="com.niroj.activity.SimpleXYPlotActivity"
+            android:label="@string/app_name" >
+        </activity>
     </application>
 
 </manifest>

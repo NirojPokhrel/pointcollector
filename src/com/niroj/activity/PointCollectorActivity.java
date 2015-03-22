@@ -122,7 +122,7 @@ public class PointCollectorActivity extends Activity {
 			editView.setGravity(Gravity.CENTER);
 			editView.setInputType(EditorInfo.TYPE_NUMBER_FLAG_SIGNED);
 			editView.setRawInputType(Configuration.KEYBOARD_QWERTY);
-			// editView.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED);
+			editView.setImeOptions(EditorInfo.IME_ACTION_DONE);
 			mLLayoutEditBox.addView(editView);
 			mEditTextArray[i] = editView;
 		}
@@ -197,7 +197,10 @@ public class PointCollectorActivity extends Activity {
 		menuItem = menu.add(0, FINAL_POINTER_SUM, 300, "Sum");
 		menuItem.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_NEVER);
 
-		menuItem = menu.add(0, FINAL_POINTER_SAVE_AND_EXIT, 400,
+		menuItem = menu.add(0, FINAL_POINTER_PERFORMANCE_GRAPH, 400, "Performance Graph");
+		menuItem.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_NEVER);
+		
+		menuItem = menu.add(0, FINAL_POINTER_SAVE_AND_EXIT, 500,
 				"Save And Exit");
 		menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 
@@ -260,6 +263,38 @@ public class PointCollectorActivity extends Activity {
 			// players
 			SelectGameListDialog dialog = new SelectGameListDialog();
 			dialog.show(getFragmentManager(), "Sum");
+			return true;
+		}
+		case FINAL_POINTER_PERFORMANCE_GRAPH: {
+			Intent intent = new Intent(this, SimpleXYPlotActivity.class);
+			intent.putStringArrayListExtra(SimpleXYPlotActivity.PLAYERS_NAME_LIST, mPlayersName);
+			Object[] objectArray = new Object[mPlayersName.size()];
+			int sum[] = new int[mPlayersName.size()];
+			for( int i=0; i<mPlayersName.size(); i++ ) {
+				objectArray[i] = new ArrayList<Integer>();
+			}
+			
+			for( int i=0; i<mLLPoints.size(); i++ ) {
+				ArrayList<Integer> intList = mLLPoints.get(i);
+				for( int j=0; j<intList.size(); j++ ) {
+					if( i==0 ) {
+						sum[j] = intList.get(j);
+					} else {
+						sum[j] = sum[j] + intList.get(j);
+					}
+					ArrayList<Integer> list = (ArrayList<Integer>) objectArray[j];
+					list.add(sum[j]);
+				}
+			}
+			for( int i=0; i<sum.length; i++ ) {
+				ZSystem.LogD(" Sum["+i+"]"+sum[i] + " size: " + ((ArrayList) objectArray[i]).size());
+			}
+			for( int i=0; i<mPlayersName.size(); i++ ) {
+				String str = SimpleXYPlotActivity.PLAYERS_NUMBER_INITIAL + (i+1);
+				ArrayList<Integer> intList = (ArrayList<Integer>)objectArray[i];
+				intent.putIntegerArrayListExtra(str, intList);
+			}
+			startActivity(intent);
 			return true;
 		}
 		default:
@@ -450,4 +485,6 @@ public class PointCollectorActivity extends Activity {
 	private final int FINAL_POINTER_NEW_INPUT_ADD = 2;
 	private final int FINAL_POINTER_SAVE_AND_EXIT = 3;
 	private final int FINAL_POINTER_SUM = 4;
+	private final int FINAL_POINTER_PERFORMANCE_GRAPH = 5;
+	
 }
