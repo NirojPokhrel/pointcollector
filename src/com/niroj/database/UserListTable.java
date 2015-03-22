@@ -59,7 +59,7 @@ public class UserListTable {
 	public void open() {
 		mDataBase = mSQLiteOpenHelper.getWritableDatabase();
 		if( mDataBase == null ) {
-			ZSystem.LogD("open: userListTable DataBase is null ");
+			ZSystem.LogE("open: userListTable DataBase is null ");
 		}
 	}
 	

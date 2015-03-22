@@ -38,26 +38,18 @@ public class PlayerListActivity extends Activity {
 	public void onCreate( Bundle savedInstanceState ) {
 		super.onCreate(savedInstanceState);
 		mActivity = this;
-		ZSystem.LogD("PlayerListActivity: Level 0");
 		setContentView(R.layout.player_list);
-		ZSystem.LogD("Level 1");
 		Button btn = (Button) findViewById(R.id.addNewPlayer);
 		btn.setOnClickListener(mOnClickListener);
-		ZSystem.LogD("PlayerListActivity: Level 2");
 
 		mListOfPlayers = new ArrayList<UserListData>(); 
 		mPlayerListAdapter = new PlayerListAdapter(this, mListOfPlayers);
 
-		ZSystem.LogD("PlayerListActivity: Level 3");
 		ListView lv = (ListView) findViewById(R.id.listOfPlayers);
 		lv.setAdapter(mPlayerListAdapter);
-		
 
 		mDbManager = DataBaseManager.GetInstance(this);
-		ZSystem.LogD("PlayerListActivity: Level 4");
 		mPlayerList.run();
-		ZSystem.LogD("PlayerListActivity: Level 5");
-		
 	}
 	
 	private OnClickListener mOnClickListener = new OnClickListener() {
@@ -147,8 +139,7 @@ public class PlayerListActivity extends Activity {
 		@Override
 		public void run() {
 			// TODO Auto-generated method stub
-			ArrayList<UserListData> userListData = mDbManager.GetUserListData(); 
-			ZSystem.LogD("userListData.size() = " + userListData.size());
+			ArrayList<UserListData> userListData = mDbManager.GetUserListData();
 			for( int i=0; i<userListData.size(); i++ ) {
 				mPlayerListAdapter.add(userListData.get(i));
 			}

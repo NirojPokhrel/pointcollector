@@ -3,7 +3,6 @@ package com.niroj.database;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.niroj.marriagepointcollector.ZSystem;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -78,7 +77,6 @@ public class GameListTable {
 		
 		cursor.moveToFirst();
 		while( !cursor.isAfterLast() ) {
-			ZSystem.LogD("GetAllGameData: Inside cursor loop");
 			GameListData gameData = CursorToData(cursor);
 			
 			listGames.add(gameData);

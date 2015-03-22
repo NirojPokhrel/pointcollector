@@ -76,20 +76,16 @@ public class UserPointTable {
 		List<UserPointData> userPointList;
 		String tableName;
 		
-		ZSystem.LogD("GetPointOfUser Level 0");
 		tableName = USER_POINT_TABLE + mPlayerName;
-		ZSystem.LogD("GetPointOfUser Level 01");
 		userPointList = new ArrayList<UserPointData>();
-		ZSystem.LogD("GetPointOfUser Level 02");
-		ZSystem.LogD("GetPointOfUser: "+tableName);
 		if( mDatabase == null ) {
-			ZSystem.LogD("Database is null");
+			ZSystem.LogE("Database is null");
+			
+			return null;
 		}
 		Cursor cursor = mDatabase.query( tableName, ALL_COLUMNS_USER_POINT_TABLE, null, null, null, null, null);
-		ZSystem.LogD("GetPointOfUser Level 1");
 		cursor.moveToFirst();
 
-		ZSystem.LogD("GetPointOfUser Level 2");
 		while(!cursor.isAfterLast()) {
 			UserPointData userPoint;
 			
@@ -98,7 +94,6 @@ public class UserPointTable {
 			cursor.moveToNext();
 		}
 
-		ZSystem.LogD("GetPointOfUser Level 3");
 		return userPointList;
 	}
 	
@@ -115,6 +110,5 @@ public class UserPointTable {
 		SQLiteOpenHelper sqliteOpenHelper = CustomSQLiteOpenHelper.GetInstance(context); 
 		SQLiteDatabase sqliteDatabase = sqliteOpenHelper.getWritableDatabase();
 		sqliteDatabase.execSQL(GetUserPointTableCreateCmd(playerName));
-		ZSystem.LogD("CreateTable cmd: "+GetUserPointTableCreateCmd(playerName));
 	}
 }

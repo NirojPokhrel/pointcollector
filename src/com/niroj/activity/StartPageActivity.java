@@ -29,7 +29,6 @@ public class StartPageActivity extends Activity {
 
 		SharedPreferences sharedPref = getSharedPreferences(ZSystem.SHARED_PREFERENCES, Context.MODE_PRIVATE);
 		boolean isOldGame = sharedPref.getBoolean(ZSystem.SHARED_PREF_CHECK_AVAILABILITY, false);
-		ZSystem.LogD("isOldGame : "+isOldGame);
 		if( isOldGame ) {
 
 			getFragmentManager().beginTransaction()
@@ -77,6 +76,11 @@ public class StartPageActivity extends Activity {
 					finish();
 					break;
 				case R.id.saveAndStart:
+					SharedPreferences sharedPref = getSharedPreferences(ZSystem.SHARED_PREFERENCES, Context.MODE_PRIVATE);
+					SharedPreferences.Editor editor = sharedPref.edit();
+					editor.putBoolean(ZSystem.SHARED_PREF_CHECK_AVAILABILITY, false);
+					editor.commit();
+					
 					mActivity.getFragmentManager().beginTransaction()
 							.add(R.id.container, new NewGameSelectionOptionFragment()).commit();
 					break;

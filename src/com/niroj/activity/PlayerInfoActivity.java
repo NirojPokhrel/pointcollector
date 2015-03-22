@@ -24,31 +24,27 @@ public class PlayerInfoActivity extends Activity {
 	public void onCreate( Bundle savedInstanceState ) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.player_info);
-		ZSystem.LogD("PlayerInfoActivity: level 0");
 		Intent intent = getIntent();
 		Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.image_holder);
 		String displayName = intent.getStringExtra(PLAYER_DISPLAY_NAME);
 		String name = intent.getStringExtra(PLAYER_NAME);
-		ZSystem.LogD("PlayerInfoActivity: level 2");
 		mDbManager = DataBaseManager.GetInstance(this);
 		UserListData userListData = mDbManager.GetUserData(displayName);
 
 		if( userListData == null ) {
-			ZSystem.LogD("userListData is null");
+			ZSystem.LogE("userListData is null");
+			
+			return;
 		}
-		ZSystem.LogD("PlayerInfoActivity: level 3");
 		ImageView imgView = (ImageView) findViewById(R.id.userImage);
-		ZSystem.LogD("PlayerInfoActivity: level 3 1");
 		if( userListData.mImage == null ) {
 			ZSystem.LogD("Bitmap byte data is null");
 		}
 		imgView.setImageBitmap(DataBaseManager.ConvertByteStreamToBitmap( userListData.mImage));
 		TextView tv = (TextView) findViewById(R.id.textBox);
 
-		ZSystem.LogD("PlayerInfoActivity: level 4");
 		ArrayList<UserPointData> userListPoint = mDbManager.GetPlayerInfo(displayName);
 
-		ZSystem.LogD("PlayerInfoActivity: level 5");
 		int win = 0, loss = 0, numOfGames = 0;
 		String prev = null;
 		for( int i=0; i<userListPoint.size(); i++ ) {
@@ -64,8 +60,6 @@ public class PlayerInfoActivity extends Activity {
 		}
 		String htmlStr = convertToHtml( name, win, loss, win-loss, numOfGames);
 		tv.setText(Html.fromHtml(htmlStr));
-
-		ZSystem.LogD("PlayerInfoActivity: level 6");
 	}
 	
 	private String convertToHtml(String name, int win, int loss, int net, int numOfGamesPlayed ) {

@@ -70,8 +70,9 @@ public class GameHistoryActivity extends Activity {
 		private String ConvertToHtmlString( ArrayList<String> strList ) {
 			String str;
 			
-			str = "<h1>" + strList.get(0) +"</h1>";
-			for( int i=1; i<strList.size()-1; i += 2 ) {
+			str = "<h5>" + strList.get(0) +"</h5>";
+			str += "<h6><u><i>" + strList.get(1) +"</u></i><br></h6>";
+			for( int i=2; i<strList.size()-1; i += 2 ) {
 				String name = strList.get(i);
 				String value = strList.get(i+1);
 				str += name + " : " + value + "<br>";
@@ -113,6 +114,7 @@ public class GameHistoryActivity extends Activity {
 				GameListData gameData = gameListData.get(i);
 				
 				listGameInfo.add(gameData.mGameName);
+				listGameInfo.add(gameData.mDate);
 				String playerJson = gameData.mListOfPlayerDisplayName;
 				try {
 					ArrayList<String> playerDisplayName = mDbManager.JsonToPlayerList(playerJson);

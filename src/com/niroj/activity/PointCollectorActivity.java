@@ -59,9 +59,7 @@ public class PointCollectorActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mActivity = this;
-		ZSystem.LogD("Level 0");
 		mDbManager = DataBaseManager.GetInstance(this);
-		ZSystem.LogD("Level 1");
 
 		SharedPreferences sharedPref = getSharedPreferences(ZSystem.SHARED_PREFERENCES, Context.MODE_PRIVATE);
 		mPrefEditor = sharedPref.edit();
@@ -73,13 +71,11 @@ public class PointCollectorActivity extends Activity {
 		
 		boolean isOldGame = sharedPref.getBoolean(ZSystem.SHARED_PREF_CHECK_AVAILABILITY, false);
 		if( isOldGame ) {
-			ZSystem.LogD("Level 4");
 			Set<String> playerSet = sharedPref.getStringSet(ZSystem.SHARED_PREF_SET_OF_PLAYERS, null);
 			//Check if new ArrayList<> has to be created ?? Most probably yes
 			//Initialize the array as well here from the previous data
 			mPlayersName = new ArrayList<String>(playerSet);
 			mGameName = sharedPref.getString(ZSystem.SHARED_PREF_GAME_NAME, null);
-			ZSystem.LogD("Level 5");
 		} else {
 			Intent intent = getIntent();
 			mGameName = intent.getStringExtra(ZSystem.NAME_STRING);
@@ -133,10 +129,8 @@ public class PointCollectorActivity extends Activity {
 		mLLayoutEditBox.setVisibility(View.GONE);
 
 		//mFileOps = FileOperations.getInstance();
-		ZSystem.LogD("Level 2");
 		if(isOldGame) 
 			PopulateList();
-		ZSystem.LogD("Level 3");
 	}
 	
 	private void PopulateList() {
@@ -144,9 +138,7 @@ public class PointCollectorActivity extends Activity {
 		int count = 0;
 		
 		for( int i=0; i<mPlayersName.size(); i++ ) {
-			ZSystem.LogD("PopulateList: Level 6 with name " + mPlayersName.get(i));
 			ArrayList<UserPointData> userPointList = mDbManager.GetPlayerInfo(mPlayersName.get(i));
-			ZSystem.LogD("PopulateList: Level 7");
 			count = 0;
 			for( int j=0; j<userPointList.size(); j++ ) {
 				if( userPointList.get(j).mAssociatedGameName.equals(mGameName)) {
@@ -163,7 +155,6 @@ public class PointCollectorActivity extends Activity {
 			}
 		}
 
-		ZSystem.LogD("PopulateList: Level 8");
 		for( int i=0; i<llIntegerArray.size(); i++ ) {
 			mPointCollectorAdapter.add(llIntegerArray.get(i));
 		}

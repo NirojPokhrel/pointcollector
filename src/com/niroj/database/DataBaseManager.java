@@ -58,33 +58,23 @@ public class DataBaseManager {
 	}
 
 	public void Open(Context context) {
-		if( mNumOfReference == 0 ) {
-			ZSystem.LogD("Open: Level 1");
+		if( mNumOfReference == 0 ) {]
 			mUserListTable.open();
-			ZSystem.LogD("Open: Level 2");
 			mGameListTable.open();
 
-			ZSystem.LogD("Open: Level 3");
 			mGameListData = (ArrayList<GameListData>) mGameListTable.GetAllGameData();
-			ZSystem.LogD("Open: Level 4");
 			mUserListData = (ArrayList<UserListData>) mUserListTable.GetListOfUser();
-			ZSystem.LogD("Open: Level 5");
 			for( int i=0; i<mUserListData.size(); i++ ) {
-				ZSystem.LogD("Open: Inside for loop " + mUserListData.size());
-				ZSystem.LogD("Open: Inside for loop " + mUserListData.get(i).mPlayerDisplayName );
 				UserPointTable userPointTable = new UserPointTable(context, mUserListData.get(i).mPlayerDisplayName);
 
 				userPointTable.Open();
-				ZSystem.LogD("Open: Inside for loop Level 0");
 				mUserPointTableList.add(userPointTable);
 				if( userPointTable == null ) {
-					ZSystem.LogD("Open: Inside for loop Level userPointTable is null");
+					ZSystem.LogE("Open: Inside for loop Level userPointTable is null");
+					continue;
 				}
-				ZSystem.LogD("Open: Inside for loop Level 1");
 				mLLUserPointData.add((ArrayList<UserPointData>) userPointTable.GetPointOfUser());
-				ZSystem.LogD("Open: Inside for loop Level 2");
 			}
-			ZSystem.LogD("Open: Level 7");
 		}
 		mNumOfReference++;
 	}
@@ -105,7 +95,7 @@ public class DataBaseManager {
 		userListData.mPlayerName = playerName;
 		userListData.mPlayerDisplayName = displayName;
 		userListData.mImage = ConvetBitmapToByteStream(image);
-		ZSystem.LogD("Error entering the user entry: " + mUserListTable.InsertUserDataInTable(userListData));
+		mUserListTable.InsertUserDataInTable(userListData);
 		mUserListData.add(userListData);
 
 		UserPointTable.CreateTable(displayName, mContext);
@@ -163,10 +153,9 @@ public class DataBaseManager {
 	
 	//Let user program call it directly
 	public static Bitmap ConvertByteStreamToBitmap( byte[] imageByteStream ) {
-		ZSystem.LogD(" ImageByteStream length :" +imageByteStream.length);
 		Bitmap bitmap = BitmapFactory.decodeByteArray(imageByteStream, 0, imageByteStream.length);
 		if( bitmap == null ) {
-			ZSystem.LogD("Bitmap is null");
+			ZSystem.LogE("Bitmap is null");
 		}
 		return bitmap;
 	}
@@ -191,11 +180,7 @@ public class DataBaseManager {
 	}
 	
 	public UserListData GetUserData(String userDisplayName) {
-		ZSystem.LogD("mUserListData.size() :" + mUserListData.size());
 		for (int i = 0; i < mUserListData.size(); i++) {
-			ZSystem.LogD("userDisplayName from list :"
-					+ mUserListData.get(i).mPlayerDisplayName
-					+ " From function calll :" + userDisplayName);
 
 			if (mUserListData.get(i).mPlayerDisplayName.equals(userDisplayName))
 				return mUserListData.get(i);
