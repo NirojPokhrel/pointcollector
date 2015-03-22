@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.niroj.database.DataBaseManager;
+import com.niroj.database.UserPointTable.UserPointData;
 import com.niroj.gamedata.DataType;
 import com.niroj.gamedata.FileOperations;
 import com.niroj.marriagepointcollector.R;
@@ -52,23 +53,33 @@ public class PointCollectorActivity extends Activity {
 	private boolean mbIsReady = false;
 	SharedPreferences.Editor mPrefEditor;
 	private DataBaseManager mDbManager;
-	private ArrayList<Integer> mCurretnIntegerList;
+	private ArrayList<Integer> mCurrentIntegerList;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mActivity = this;
+		ZSystem.LogD("Level 0");
 		mDbManager = DataBaseManager.GetInstance(this);
+		ZSystem.LogD("Level 1");
 
 		SharedPreferences sharedPref = getSharedPreferences(ZSystem.SHARED_PREFERENCES, Context.MODE_PRIVATE);
 		mPrefEditor = sharedPref.edit();
+		
+
+		// Initialize List view
+		mLLPoints = new ArrayList<ArrayList<Integer>>();
+		mPointCollectorAdapter = new PointCollectorArrayAdapter(this, mLLPoints);
+		
 		boolean isOldGame = sharedPref.getBoolean(ZSystem.SHARED_PREF_CHECK_AVAILABILITY, false);
 		if( isOldGame ) {
+			ZSystem.LogD("Level 4");
 			Set<String> playerSet = sharedPref.getStringSet(ZSystem.SHARED_PREF_SET_OF_PLAYERS, null);
 			//Check if new ArrayList<> has to be created ?? Most probably yes
 			//Initialize the array as well here from the previous data
 			mPlayersName = new ArrayList<String>(playerSet);
 			mGameName = sharedPref.getString(ZSystem.SHARED_PREF_GAME_NAME, null);
+			ZSystem.LogD("Level 5");
 		} else {
 			Intent intent = getIntent();
 			mGameName = intent.getStringExtra(ZSystem.NAME_STRING);
@@ -94,10 +105,6 @@ public class PointCollectorActivity extends Activity {
 			textView.setGravity(Gravity.CENTER);
 			lLayout.addView(textView);
 		}
-
-		// Initialize List view
-		mLLPoints = new ArrayList<ArrayList<Integer>>();
-		mPointCollectorAdapter = new PointCollectorArrayAdapter(this, mLLPoints);
 
 		ListView liView = (ListView) findViewById(R.id.listPointCollector);
 		liView.setAdapter(mPointCollectorAdapter);
@@ -126,6 +133,40 @@ public class PointCollectorActivity extends Activity {
 		mLLayoutEditBox.setVisibility(View.GONE);
 
 		//mFileOps = FileOperations.getInstance();
+		ZSystem.LogD("Level 2");
+		if(isOldGame) 
+			PopulateList();
+		ZSystem.LogD("Level 3");
+	}
+	
+	private void PopulateList() {
+		ArrayList<ArrayList<Integer>> llIntegerArray = new ArrayList<ArrayList<Integer>>();
+		int count = 0;
+		
+		for( int i=0; i<mPlayersName.size(); i++ ) {
+			ZSystem.LogD("PopulateList: Level 6 with name " + mPlayersName.get(i));
+			ArrayList<UserPointData> userPointList = mDbManager.GetPlayerInfo(mPlayersName.get(i));
+			ZSystem.LogD("PopulateList: Level 7");
+			count = 0;
+			for( int j=0; j<userPointList.size(); j++ ) {
+				if( userPointList.get(j).mAssociatedGameName.equals(mGameName)) {
+					ArrayList<Integer> arrayList;
+					if( i== 0 ) {
+						arrayList = new ArrayList<Integer>();
+						llIntegerArray.add(arrayList);
+					} else {
+						arrayList = llIntegerArray.get(count++);
+					}
+					
+					arrayList.add(userPointList.get(j).mGamePoint);
+				}
+			}
+		}
+
+		ZSystem.LogD("PopulateList: Level 8");
+		for( int i=0; i<llIntegerArray.size(); i++ ) {
+			mPointCollectorAdapter.add(llIntegerArray.get(i));
+		}
 	}
 
 	@Override
@@ -203,7 +244,7 @@ public class PointCollectorActivity extends Activity {
 				WarningDialogForKatFad dialog1 = new WarningDialogForKatFad();
 				dialog1.show(getFragmentManager(), "Warning");
 			}
-			mCurretnIntegerList = pointList;
+			mCurrentIntegerList = pointList;
 			mWriteInToDataBase.run();
 			
 			return true;
@@ -409,7 +450,7 @@ public class PointCollectorActivity extends Activity {
 		@Override
 		public void run() {
 			// TODO Auto-generated method stub
-			mDbManager.InsertGamePoint(mGameName, mPlayersName, mCurretnIntegerList);
+			mDbManager.InsertGamePoint(mGameName, mPlayersName, mCurrentIntegerList);
 		}
 		
 	};
